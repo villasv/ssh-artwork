@@ -20,8 +20,27 @@ def generate_key():
 
 from randomart import get_randomart
 
+def diff(a_art, b_art):
+    return 0
+
 if __name__ == "__main__":
-    # private_key, public_key = generate_key()
-    public_key = bytes(input(), 'utf-8')
+    with open('target.art') as f:
+        target_art = f.read()
+    print("Target Art:")
+    print(target_art)
+    print()
+
+    import os
+    _, _, art_files = next(os.walk('./keys'))
+    approx_file = './keys/' + sorted(art_files)[-1]
+
+    with open(approx_file) as f:
+        approx_art = f.read()
+    print("Approx Art:")
+    print(approx_art)
+    print()
+
+    print("Starting search...")
+    private_key, public_key = generate_key()
     art = get_randomart(public_key)
     print(art)
