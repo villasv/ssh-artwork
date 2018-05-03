@@ -1,27 +1,25 @@
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.backends import default_backend as crypto_default_backend
-from cryptography.hazmat.primitives import serialization as crypto_serialization
-
-def generate_key():
-    key = rsa.generate_private_key(
-        backend=crypto_default_backend(),
-        public_exponent=65537, # RFC 4871, don't change it
-        key_size=4096 # standard strong key, as suggested by GitHub
-    )
-    private_key = key.private_bytes(
-        crypto_serialization.Encoding.PEM,
-        crypto_serialization.PrivateFormat.PKCS8,
-        crypto_serialization.NoEncryption())
-    public_key = key.public_key().public_bytes(
-        crypto_serialization.Encoding.OpenSSH,
-        crypto_serialization.PublicFormat.OpenSSH
-    )
-    return private_key, public_key
-
+from crypto import generate_key
 from randomart import get_randomart
 
+heavy_set = ['B', 'O', 'X', '@', '%', '&', '#', 'S', 'E']
+light_set = ['.', 'o', '+', '=', '*', '/', '^']
+
 def diff(a_art, b_art):
-    return 0
+    def diff_coin_pair(pair):
+        a, b = pair
+        if a == b:
+            return 0
+        if (a == ' ' and b in heavy_set) or (a in heavy_set and b == ' '):
+            return 100
+        if (a == ' ' and b in light_set) or (a in light_set and b == ' '):
+            return 50
+        if (a in light_set and b in heavy_set) or (a in heavy_set and b in light_set):
+            return 10
+        return 1
+
+    from operator import add
+    from functools import reduce
+    return  reduce(add, map(diff_coin_pair, zip(a_art, b_art)))
 
 if __name__ == "__main__":
     with open('target.art') as f:
@@ -40,7 +38,9 @@ if __name__ == "__main__":
     print(approx_art)
     print()
 
+    print("Current diff: {}".format(diff(target_art, approx_art)))
     print("Starting search...")
+
     private_key, public_key = generate_key()
     art = get_randomart(public_key)
     print(art)
