@@ -3,21 +3,21 @@ from randomart import get_randomart
 
 
 def diff(a_art, b_art):
-    heavy_set = ['B', 'O', 'X', '@', '%', '&', '#', 'S', 'E']
-    light_set = ['.', 'o', '+', '=', '*', '/', '^']
+    heavy_set = ['B', 'O', 'X', '@', '%', '&', '#', '/', '^', 'S', 'E']
+    light_set = ['.', 'o', '+', '=', '*']
 
     def diff_coin_pair(pair):
         a, b = pair
         if a == b:
             return 0
-        if (a == ' ' and b in heavy_set) or (a in heavy_set and b == ' '):
-            return 100
-        if (a == ' ' and b in light_set) or (a in light_set and b == ' '):
-            return 50
-        if (a in light_set and b in heavy_set) or (a in heavy_set and b in light_set):
-            return 10
         if (a in light_set and b in light_set) or (a in heavy_set and b in heavy_set):
             return 1
+        if (a in light_set and b in heavy_set) or (a in heavy_set and b in light_set):
+            return 2
+        if (a == ' ' and b in light_set) or (a in light_set and b == ' '):
+            return 50
+        if (a == ' ' and b in heavy_set) or (a in heavy_set and b == ' '):
+            return 100
         
         raise Exception("Should never happen! '{}'<>'{}'".format(a, b))
 
