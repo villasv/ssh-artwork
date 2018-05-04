@@ -48,7 +48,7 @@ def search(_):
         with open(approx_file, 'w') as f:
             approx_art = f.write(newest_art)
         with open(approx_file[:-3] + '.key', 'w') as f:
-            approx_art = f.write(private_key)
+            approx_art = f.write(str(private_key, 'utf-8'))
     
 
 from multiprocessing import Pool
@@ -56,5 +56,5 @@ from tqdm import tqdm
 
 if __name__ == "__main__":
     attempts = 1000
-    with Pool(processes=10) as p:
+    with Pool(processes=3) as p:
         r = list(tqdm(p.imap(search, range(attempts)), total=attempts))
