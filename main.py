@@ -1,63 +1,59 @@
+from pathlib import Path
+from operator import add
+from functools import reduce
+from multiprocessing import Pool
+from tqdm import tqdm
 from crypto import generate_key
-from randomart import get_randomart
+from randomart import generate_key_art
+
+HEAVY_SET = {"B", "O", "X", "@", "%", "&", "#", "/", "^", "S", "E"}
+LIGHT_SET = {".", "o", "+", "=", "*"}
 
 
-def diff(a_art, b_art):
-    heavy_set = ['B', 'O', 'X', '@', '%', '&', '#', '/', '^', 'S', 'E']
-    light_set = ['.', 'o', '+', '=', '*']
-
-    def diff_coin_pair(pair):
+def diff(a_art: str, b_art: str) -> int:
+    def diff_coin_pair(pair: tuple) -> int:
         a, b = pair
         if a == b:
             return 0
-        if (a in light_set and b in light_set) or (a in heavy_set and b in heavy_set):
+        if (a in LIGHT_SET and b in LIGHT_SET) or (a in HEAVY_SET and b in HEAVY_SET):
             return 1
-        if (a in light_set and b in heavy_set) or (a in heavy_set and b in light_set):
+        if (a in LIGHT_SET and b in HEAVY_SET) or (a in HEAVY_SET and b in LIGHT_SET):
             return 2
-        if (a == ' ' and b in light_set) or (a in light_set and b == ' '):
+        if (a == " " and b in LIGHT_SET) or (a in LIGHT_SET and b == " "):
             return 50
-        if (a == ' ' and b in heavy_set) or (a in heavy_set and b == ' '):
+        if (a == " " and b in HEAVY_SET) or (a in HEAVY_SET and b == " "):
             return 100
-        
-        raise Exception("Should never happen! '{}'<>'{}'".format(a, b))
 
-    from operator import add
-    from functools import reduce
-    return  reduce(add, map(diff_coin_pair, zip(a_art, b_art)))
+        raise ValueError(f"Unexpected character pair: '{a}'<>'{b}'")
+
+    return reduce(add, map(diff_coin_pair, zip(a_art, b_art)))
+
+
+keys_dir = Path("./keys")
 
 
 def search(_):
-    with open('target.art') as f:
-        target_art = f.read()
-
-    import os
-    _, _, art_files = next(os.walk('./keys'))
-    approx_file = './keys/' + sorted(art_files)[-2]
-
-    with open(approx_file) as f:
-        approx_art = f.read()
-
-    approx_diff = diff(target_art, approx_art)
+    target_art = (keys_dir / "target.art").read_text()
+    art_files = sorted(keys_dir.glob("*.art"))
+    best_diff = int(art_files[0].stem)
 
     private_key, public_key = generate_key()
-    newest_art = get_randomart(public_key)
-    newest_diff = diff(target_art, newest_art)
+    new_art = generate_key_art(public_key)
+    new_diff = diff(target_art, new_art)
 
-    if newest_diff < approx_diff:
-        print("New approximation found! Diff = {}".format(newest_diff))
-        print(newest_art)
-        index = int(approx_file[7:-4])
-        approx_file = "./keys/{}.art".format(index+1)
-        with open(approx_file, 'w') as f:
-            approx_art = f.write(newest_art)
-        with open(approx_file[:-3] + 'key', 'w') as f:
-            approx_art = f.write(str(private_key, 'utf-8'))
-    
+    if new_diff < best_diff:
+        print(f"New approximation found! Diff = {new_diff}")
+        print(new_art)
+        newest_art_file = f"{new_diff}.art"
+        Path(keys_dir / newest_art_file).write_text(new_art)
 
-from multiprocessing import Pool
-from tqdm import tqdm
+        private_key_file = keys_dir / f"id_ed25519 ({new_diff})"
+        private_key_file.write_text(private_key.decode())
+        public_key_file = keys_dir / f"id_ed25519 ({new_diff}).pub"
+        public_key_file.write_text(public_key.decode())
+
 
 if __name__ == "__main__":
-    attempts = 1000
+    attempts = 1_000_000
     with Pool(processes=1) as p:
-        r = list(tqdm(p.imap(search, range(attempts)), total=attempts))
+        list(tqdm(p.imap(search, range(attempts)), total=attempts))

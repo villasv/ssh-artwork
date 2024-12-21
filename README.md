@@ -1,8 +1,8 @@
 # SSH Artist
 
 Want to find an SSH key with a specific hash visualization pattern? If so, then
-this is the tool for you. If not, just don't make me SSH into your servers with
-their ugly-ass keys.
+this is the tool for you. If not, don't make me SSH into your servers with their
+keys!
 
 ## Visualizing Public Keys
 
@@ -29,7 +29,7 @@ OpenSSH 5.1 introduced a visual hash representation of public keys. From its cha
 You can visualize your existing keys with the following command:
 
 ```
-ssh-keygen -lv -f ~/.ssh/id_rsa.pub
+ssh-keygen -lv -f ~/.ssh/id_ed25519.pub
 ```
 
 It's probably gibberish, as expected from all the randomness involved. My
@@ -71,11 +71,11 @@ For example, I wanted a key that looked like this:
 +-----[SHA256]----+
 ```
 
-In order to get it, draw the desired end state on the `keys/E.art` and then
+In order to get it, draw the desired end state on the `keys/target.art` and then
 start the artist creative process with
 
 ```
-./ssh-artist
+pipenv run python main.py
 ```
 
 and kill the artist when patience is depleted.
