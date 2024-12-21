@@ -6,10 +6,10 @@ def generate_key():
     # Generate an Ed25519 private key
     key = ed25519.Ed25519PrivateKey.generate()
 
-    # Serialize the private key to PEM format
+    # Serialize the private key to OpenSSH format
     private_key = key.private_bytes(
         crypto_serialization.Encoding.PEM,
-        crypto_serialization.PrivateFormat.PKCS8,
+        crypto_serialization.PrivateFormat.OpenSSH,
         crypto_serialization.NoEncryption(),
     )
 

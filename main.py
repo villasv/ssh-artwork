@@ -29,31 +29,36 @@ def diff(a_art: str, b_art: str) -> int:
     return reduce(add, map(diff_coin_pair, zip(a_art, b_art)))
 
 
+arts_dir = Path("./arts")
 keys_dir = Path("./keys")
+keys_dir.mkdir(exist_ok=True, parents=True)
 
 
 def search(_):
-    target_art = (keys_dir / "target.art").read_text()
-    art_files = sorted(keys_dir.glob("*.art"))
+    target_art = (arts_dir / "target.art").read_text()
+    art_files = sorted(arts_dir.glob("*.art"))
     best_diff = int(art_files[0].stem)
 
     private_key, public_key = generate_key()
     new_art = generate_key_art(public_key)
     new_diff = diff(target_art, new_art)
 
+    if new_diff > 2000:  # lame art threshold, don't bother saving
+        return
+
     if new_diff < best_diff:
         print(f"New approximation found! Diff = {new_diff}")
         print(new_art)
         newest_art_file = f"{new_diff}.art"
-        Path(keys_dir / newest_art_file).write_text(new_art)
+        Path(arts_dir / newest_art_file).write_text(new_art)
 
-        private_key_file = keys_dir / f"id_ed25519 ({new_diff})"
+        private_key_file = keys_dir / "id_ed25519"
         private_key_file.write_text(private_key.decode())
-        public_key_file = keys_dir / f"id_ed25519 ({new_diff}).pub"
+        public_key_file = keys_dir / "id_ed25519.pub"
         public_key_file.write_text(public_key.decode())
 
 
 if __name__ == "__main__":
-    attempts = 1_000_000
-    with Pool(processes=1) as p:
+    attempts = 50_000_000
+    with Pool(processes=20) as p:
         list(tqdm(p.imap(search, range(attempts)), total=attempts))

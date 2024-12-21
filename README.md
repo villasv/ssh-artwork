@@ -2,7 +2,7 @@
 
 Want to find an SSH key with a specific hash visualization pattern? If so, then
 this is the tool for you. If not, don't make me SSH into your servers with their
-keys!
+ugly keys!
 
 ## Visualizing Public Keys
 
@@ -71,7 +71,7 @@ For example, I wanted a key that looked like this:
 +-----[SHA256]----+
 ```
 
-In order to get it, draw the desired end state on the `keys/target.art` and then
+In order to get it, draw the desired end state on the `arts/target.art` and then
 start the artist creative process with
 
 ```
@@ -79,3 +79,21 @@ pipenv run python main.py
 ```
 
 and kill the artist when patience is depleted.
+
+Here's what I got in a few minutes:
+
+```
++--[ED25519 256]--+
+| o++o. . .o=o    |
+|  ++O o   ++.    |
+|   =.BE+ +o.     |
+|    .=B=..o..    |
+|    ..o=S+..     |
+|    . o.O..      |
+|     . O         |
+|      o .        |
+|                 |
++-----[SHA256]----+
+```
+
+Still ugly, but at least it resembles something.
