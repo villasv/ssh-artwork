@@ -49,7 +49,7 @@ def search(_):
     if new_diff < best_diff:
         print(f"New approximation found! Diff = {new_diff}")
         print(new_art)
-        newest_art_file = f"{new_diff}.art"
+        newest_art_file = f"{new_diff:04d}.art"
         Path(arts_dir / newest_art_file).write_text(new_art)
 
         private_key_file = keys_dir / "id_ed25519"
@@ -59,6 +59,6 @@ def search(_):
 
 
 if __name__ == "__main__":
-    attempts = 50_000_000
+    attempts = 500_000_000
     with Pool(processes=20) as p:
         list(tqdm(p.imap(search, range(attempts)), total=attempts))
