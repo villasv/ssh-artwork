@@ -1,11 +1,11 @@
 +--[ED25519 256]--+
 |                 |
-|  .OOOO    OOO   |
-|  ..OOOO  OOO.   |
-|  ...OOOOOOO.    |
-|   ...OOSOO.     |
-|    ...OEO.      |
-|     .....       |
-|      ...        |
+|  .OOO     OOO   |
+|  ..OOO   OOO.   |
+|   ..OOO OOO.    |
+|    ..OOSOO.     |
+|     ..OEO.      |
+|      ....       |
+|       ..        |
 |                 |
 +-----[SHA256]----+

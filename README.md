@@ -9,15 +9,15 @@ ugly keys!
 OpenSSH 5.1 introduced a visual hash representation of public keys. From its changelog:
 
 ```
- * Introduce experimental SSH Fingerprint ASCII Visualisation to ssh(1)
-   and ssh-keygen(1). Visual fingerprinnt display is controlled by a new
+ * Introduce experimental SSH Fingerprint ASCII Visualization to ssh(1)
+   and ssh-keygen(1). Visual fingerprint display is controlled by a new
    ssh_config(5) option "VisualHostKey". The intent is to render
    SSH host keys in a visual form that is amenable to easy recall and
    rejection of changed host keys. This technique inspired by the
-   graphical hash visualisation schemes known as "random art[*]", and
+   graphical hash visualization schemes known as "random art[*]", and
    by Dan Kaminsky's musings at 23C3 in Berlin.
 
-   Fingerprint visualisation in is currently disabled by default, as the
+   Fingerprint visualization in is currently disabled by default, as the
    algorithm used to generate the random art is still subject to change.
 
    [*] "Hash Visualization: a New Technique to improve Real-World
@@ -36,16 +36,16 @@ It's probably gibberish, as expected from all the randomness involved. My
 original key looked like this:
 
 ```
-+---[RSA 4096]----+
-|          **o.ooO|
-|         *oo.+.B.|
-|        o E*o** =|
-|         .o O++=o|
-|        S  . =o+ |
-|            . o  |
-|             . o |
-|            oo  =|
-|            .o++o|
++--[ED25519 256]--+
+|                 |
+|                .|
+|           . . o.|
+|     .    .o..=.o|
+|      o S o.ooo=.|
+|       o o E+o*o*|
+|        = +o.X=**|
+|         = o.+*+B|
+|          . o+== |
 +----[SHA256]-----+
 ```
 
@@ -58,15 +58,15 @@ security for arbitrary human desires.
 For example, I wanted a key that looked like this:
 
 ```
-+------[RSA]------+
++--[ED25519 256]--+
 |                 |
-|  .OOOO    OOO   |
-|  ..OOOO  OOO.   |
-|  ...OOOOOOO.    |
-|   ...OOSOO.     |
-|    ...OEO.      |
-|     .....       |
-|      ...        |
+|  .OOO     OOO   |
+|  ..OOO   OOO.   |
+|   ..OOO OOO.    |
+|    ..OOSOO.     |
+|     ..OEO.      |
+|      ....       |
+|       ..        |
 |                 |
 +-----[SHA256]----+
 ```
@@ -80,18 +80,18 @@ pipenv run python main.py
 
 and kill the artist when patience is depleted.
 
-Here's what I got in a few minutes:
+Here's what I got in (quite) a few hours:
 
 ```
 +--[ED25519 256]--+
-| o++o. . .o=o    |
-|  ++O o   ++.    |
-|   =.BE+ +o.     |
-|    .=B=..o..    |
-|    ..o=S+..     |
-|    . o.O..      |
-|     . O         |
-|      o .        |
+| .+.+     *oo.   |
+|  .*o+   =o+.    |
+|  E.oo..  +=.    |
+|    ..ooo@+oo    |
+|    ..+.S*B+     |
+|     + ++.o      |
+|      o+ .       |
+|       .+        |
 |                 |
 +-----[SHA256]----+
 ```
